@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  clubname String @id @default(uuid())
+  password String
+  Articles Article[]
+}
+
+model Article {
+  id          String   @id @default(uuid())
+  content     String
+  accountClubname String 
+  createdAt   DateTime @default(now()) 
+  published   Boolean  @default(false)
+  summary     String
+  likes       Int      @default(0)  // Changed to Int
+  dislikes    Int      @default(0)  // Changed to Int
+  Comments    Comment[]
+
+  Account     Account  @relation(fields: [accountClubname], references: [clubname], onDelete: Cascade)
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  articleId String   
+  message   String
+  createdAt DateTime @default(now()) 
+  Article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+}
