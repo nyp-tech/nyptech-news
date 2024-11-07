@@ -1,3 +1,4 @@
+//@ts-nocheck
 "use client";
 
 import { Command, CommandInput } from "@/components/tailwind/ui/command";

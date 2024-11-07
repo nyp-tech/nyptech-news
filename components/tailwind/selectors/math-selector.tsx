@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Button } from "@/components/tailwind/ui/button";
 import { cn } from "@/lib/utils";
 import { SigmaIcon } from "lucide-react";

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { createImageUpload } from "novel/plugins";
 import { toast } from "sonner";
 

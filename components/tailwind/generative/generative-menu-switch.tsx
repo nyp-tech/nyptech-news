@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { EditorBubble, useEditor } from "novel";
 import { removeAIHighlight } from "novel/extensions";
 import {} from "novel/plugins";

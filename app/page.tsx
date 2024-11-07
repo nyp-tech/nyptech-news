@@ -1,17 +1,38 @@
-import TailwindAdvancedEditor from "@/components/tailwind/advanced-editor";
+"use client"
 import { Button } from "@/components/tailwind/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/tailwind/ui/dialog";
-import Menu from "@/components/tailwind/ui/menu";
-import { ScrollArea } from "@/components/tailwind/ui/scroll-area";
-import { BookOpen, GithubIcon } from "lucide-react";
-import Link from "next/link";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/tailwind/ui/dialog";
+import { Input } from "@/components/tailwind/ui/input";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-export default function Page() {
-  return (
-    <div className="flex min-h-screen flex-col items-center gap-4 py-4 sm:px-5">
-        <Menu />
+export default function Home(){
+  const [inputValue, setInputValue] = useState('');
+  const router = useRouter();
 
-      <TailwindAdvancedEditor />
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (inputValue.trim()) {
+      router.push(`/${inputValue}`);
+    }
+  };
+  return(
+<div>
+<Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">Sign In</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+      <form onSubmit={handleSubmit}>
+        <Input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder="Enter a path"
+        />
+        <Button type="submit">Go</Button>
+      </form>
+      </DialogContent>
+    </Dialog>
     </div>
-  );
+  )
 }

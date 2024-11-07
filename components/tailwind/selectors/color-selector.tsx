@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Check, ChevronDown } from "lucide-react";
 import { EditorBubbleItem, useEditor } from "novel";
 

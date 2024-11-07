@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { ArrowDownWideNarrow, CheckCheck, RefreshCcwDot, StepForward, WrapText } from "lucide-react";
 import { useEditor } from "novel";
 import { getPrevText } from "novel/utils";

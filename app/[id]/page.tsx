@@ -1,9 +1,19 @@
+import { db } from "@/lib/db"
+interface Props{
+    params:{
+        id: string
+    }
+}
+export default async function Page({params}: Props){
 
-
-export default function Page() {
-  return (
-    <div className="flex min-h-screen flex-col items-center gap-4 py-4 sm:px-5">
-fsfsrg
-    </div>
-  );
+    const name = await db.account.findFirst({
+        where:{
+            password: params.id
+        }
+    })
+    return(
+        <div>
+            {name.clubname}
+        </div>
+    )
 }

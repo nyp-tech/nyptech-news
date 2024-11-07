@@ -14,6 +14,7 @@ import {
 import { ImageResizer, MarkdownExtension, handleCommandNavigation } from "novel/extensions";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import axios from 'axios';
 import { defaultExtensions } from "./extensions";
 import { ColorSelector } from "./selectors/color-selector";
 import { LinkSelector } from "./selectors/link-selector";
@@ -25,13 +26,19 @@ import GenerativeMenuSwitch from "./generative/generative-menu-switch";
 import { uploadFn } from "./image-upload";
 import { TextButtons } from "./selectors/text-buttons";
 import { slashCommand, suggestionItems } from "./slash-command";
+import { Input } from "./ui/input";
 
 const hljs = require("highlight.js");
 
-// Add Markdown extension to the editor
 const extensions = [...defaultExtensions, slashCommand, MarkdownExtension];
 
-const TailwindAdvancedEditor = () => {
+interface Props {
+  clubname: string;
+  title: string;
+}
+
+const TailwindAdvancedEditor = ({ clubname, title }: Props) => {
+  const [editableTitle, setEditableTitle] = useState(title); // Use title prop as initial state
   const [initialContent, setInitialContent] = useState<null | JSONContent>(null);
   const [saveStatus, setSaveStatus] = useState("Saved");
   const [charsCount, setCharsCount] = useState<number>();
@@ -44,37 +51,56 @@ const TailwindAdvancedEditor = () => {
   const highlightCodeblocks = (content: string) => {
     const doc = new DOMParser().parseFromString(content, "text/html");
     doc.querySelectorAll("pre code").forEach((el) => {
-      // @ts-ignore
       hljs.highlightElement(el);
     });
     return new XMLSerializer().serializeToString(doc);
   };
 
-  const debouncedUpdates = useDebouncedCallback(async (editor: EditorInstance) => {
-    const json = editor.getJSON();
-    setCharsCount(editor.storage.characterCount.words());
-    
-    window.localStorage.setItem("html-content", highlightCodeblocks(editor.getHTML()));
-    window.localStorage.setItem("novel-content", JSON.stringify(json));
+  const saveArticle = async (editor: EditorInstance) => {
+    const jsonContent = editor.getJSON();
+    const htmlContent = highlightCodeblocks(editor.getHTML());
 
-    // Only save markdown if available
-    if (editor.storage.markdown) {
-      window.localStorage.setItem("markdown", editor.storage.markdown.getMarkdown());
+    try {
+      const response = await axios.post('/api/articles', {
+        title: editableTitle, // Using editableTitle state
+        content: htmlContent,
+        accountClubname: clubname,
+        summary: "Auto-generated summary",
+        published: false,
+      });
+      setSaveStatus("Saved");
+    } catch (error) {
+      console.error("Error saving article:", error);
+      setSaveStatus("Error");
     }
+  };
 
-    setSaveStatus("Saved");
+  const debouncedUpdates = useDebouncedCallback((editor: EditorInstance) => {
+    setCharsCount(editor.storage.characterCount.words());
+    saveArticle(editor);
   }, 500);
 
   useEffect(() => {
     const content = window.localStorage.getItem("novel-content");
-    if (content) setInitialContent(JSON.parse(content));
-    else setInitialContent(defaultEditorContent);
+    if (content) {
+      setInitialContent(JSON.parse(content));
+    } else {
+      setInitialContent(defaultEditorContent);
+    }
   }, []);
 
   if (!initialContent) return null;
 
   return (
     <div className="relative w-full max-w-screen-lg">
+      {/* Title Input Field */}
+      <Input
+        type="text"
+        value={editableTitle}
+        onChange={(e) => setEditableTitle(e.target.value)}
+        placeholder="Enter title here..."
+      />
+      {title}
       <div className="flex absolute right-5 top-5 z-10 mb-5 gap-2">
         <div className="rounded-lg bg-accent px-2 py-1 text-sm text-muted-foreground">
           {saveStatus}
@@ -83,6 +109,7 @@ const TailwindAdvancedEditor = () => {
           {charsCount} Words
         </div>
       </div>
+
       <EditorRoot>
         <EditorContent
           initialContent={initialContent}
@@ -95,8 +122,7 @@ const TailwindAdvancedEditor = () => {
             handlePaste: (view, event) => handleImagePaste(view, event, uploadFn),
             handleDrop: (view, event, _slice, moved) => handleImageDrop(view, event, moved, uploadFn),
             attributes: {
-              class:
-                "prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full",
+              class: "prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full",
             },
           }}
           onUpdate={({ editor }) => {
@@ -140,6 +166,8 @@ const TailwindAdvancedEditor = () => {
           </GenerativeMenuSwitch>
         </EditorContent>
       </EditorRoot>
+      {JSON.stringify(initialContent)}
+      {clubname}
     </div>
   );
 };

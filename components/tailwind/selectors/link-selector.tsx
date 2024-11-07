@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Button } from "@/components/tailwind/ui/button";
 import { PopoverContent } from "@/components/tailwind/ui/popover";
 import { cn } from "@/lib/utils";
