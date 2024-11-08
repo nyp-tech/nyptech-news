@@ -1,0 +1,62 @@
+---
+title: "Going Somewhere?"
+summary: "The story behind our URL shortener service."
+club: "NYP Technopreneurship Club"
+author: "Dennise Catolos"
+category: "tricks"
+image: https://nyptech.club/assets/placeholder.png
+---
+
+# Why?
+
+Have you ever tried to find a URL shortener service that is **easy-to-use**, **clean and sleak**, and most importantly, **FREE**.
+
+Well, in most cases, nope.
+
+You see, popular services such as [TinyURL](https://tinyurl.com) and [Bitly](https://bitly.com/) offers such services. But you need to pay $9.99 per month just to change the destination link?! Or even delete a link?! Heck, purchasing a YouTube Premium subscription is much more worth than this.
+
+It is really _ridiculous_.
+
+So, our team came up with the solution to building up our very own URL shortener service from scratch.
+
+# Development
+
+As we embarked on our development journey, the first step was to set up our development environment and project structure. We initialized a new Next.js project using the create-next-app command, leveraging the power and convenience it offers for building modern web applications.
+
+```
+pnpx create-next-app@latest
+```
+
+Next, we integrated DaisyUI into our project to streamline our UI development process. DaisyUI provides a collection of utility classes that can be used to rapidly build stylish and responsive user interfaces. We installed DaisyUI via npm:
+
+```
+pnpm install daisyui@latest
+```
+
+With our project setup complete, we delved into crafting the various components and pages that would comprise our application. We utilized the flexibility of Next.js to create dynamic routes and server-side rendering where needed, ensuring optimal performance and SEO-friendliness.
+
+As we progressed, we continuously tested our application to ensure its functionality and responsiveness across various devices and screen sizes. We utilized tools like Chrome DevTools and Vercel's built-in deployment previews to inspect and debug our application in real-time.
+
+Once satisfied with the core functionality and user experience of our application, we shifted our focus to optimization and deployment. Leveraging the seamless integration between Next.js and Vercel, we effortlessly deployed our application to the cloud with just a few clicks.
+
+With our application live and accessible to users, we remained vigilant in monitoring its performance and addressing any issues that arose. Through constant iteration and improvement, we aimed to deliver a seamless and delightful experience to our users, driving the success and growth of our product.
+
+# Security
+
+Security is a critical aspect of any web application, and before we integrated Clerk as our authentication service, we implemented our own custom authentication system. This system utilized basic cookies and middleware to manage user sessions and protect sensitive routes.
+
+## Setting Up Authentication
+
+Our authentication system was designed to be simple yet effective. We started by creating the necessary routes for user registration, login, and logout.
+
+## Session Management
+
+To manage user sessions, we utilized HTTP cookies. When a user logged in, we generated a secure token and stored it in a cookie. This token was then used to identify and authenticate the user on subsequent requests.
+
+## Route Protection
+
+To protect sensitive routes, we created middleware that checked for the presence of the authentication cookie. If the cookie was valid and the token matched a user session, access was granted. Otherwise, the user was redirected to the login page.
+
+# Conclusion
+
+Lesson learnt. Build your own. Don't use others, or pay them.
