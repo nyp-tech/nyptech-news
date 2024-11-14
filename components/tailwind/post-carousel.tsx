@@ -4,7 +4,7 @@ import React from "react";
 
 function PostCarousel(props: { children: React.ReactNode }) {
   const items = React.Children.toArray(props.children).filter(
-    (child) => React.isValidElement(child) && child.type === PostCarousel.Item,
+    (child) => React.isValidElement(child) && child.type === PostCarousel.Item
   );
 
   const itemElements = items.map((item, index) => {

@@ -1,5 +1,5 @@
-
 import FilterButton from "@/components/tailwind/filter-button";
+import FilterDropdown, { FilterDropdownItem } from "@/components/tailwind/filter-dropdown";
 import PostCarousel from "@/components/tailwind/post-carousel";
 import PostItem from "@/components/tailwind/post-item";
 import { getPosts } from "@/lib/posts";
@@ -21,16 +21,37 @@ const filters = [
   },
 ];
 
+const clubFilters = [
+  {
+    label: "All",
+    value: undefined,
+  },
+  {
+    label: "NYP Technopreneurship Club",
+    value: "nyptech",
+  },
+  {
+    label: "NYP AI",
+    value: "nypai",
+  },
+];
+
 export default async function Page(props: RouteProps) {
-  const { category } = await props.searchParams;
+  const { category, club } = await props.searchParams;
   const posts = getPosts();
 
   const currentFilter = filters.find((filter) => filter.value === category) ?? filters[0];
-  const filteredPosts = posts.filter((post) => !currentFilter.value || post.metadata.category == currentFilter.value);
+  const currentClubFilter = clubFilters.find((filter) => filter.value === club) ?? clubFilters[0];
+  const filteredPosts = posts.filter(
+    (post) =>
+      (!currentFilter.value || post.metadata.category == currentFilter.value) &&
+      // TODO: change current filter label to value
+      (!currentClubFilter.value || post.metadata.club == currentClubFilter.label)
+  );
 
   return (
     <main className={"mx-auto flex w-[90%] flex-col gap-4 p-4"}>
-      <Home/>
+      <Home />
       <PostCarousel>
         {posts.map((post) => (
           <PostCarousel.Item key={post.metadata.slug}>
@@ -55,16 +76,31 @@ export default async function Page(props: RouteProps) {
         <img src={"https://nyptech.club/assets/placeholder.png"} className={"row-span-1 w-full"} />
         <img src={"https://nyptech.club/assets/placeholder.png"} className={"row-span-1 w-full"} />
       </div> */}
-      <div className={"flex gap-2"}>
-        {filters.map((filter) => (
-          <FilterButton
-            key={filter.label}
-            label={filter.label}
-            name={"category"}
-            value={filter.value}
-            active={filter === currentFilter}
-          />
-        ))}
+      <div className={"flex justify-between"}>
+        <div className={"flex items-center gap-2"}>
+          {filters.map((filter) => (
+            <FilterButton
+              key={filter.label}
+              label={filter.label}
+              name={"category"}
+              value={filter.value}
+              active={filter === currentFilter}
+            />
+          ))}
+        </div>
+        <div className="flex items-center gap-2">
+          <FilterDropdown className={"btn-sm btn-outline"} label={"Filter Clubs"}>
+            {clubFilters.map((filter) => (
+              <FilterDropdownItem
+                key={filter.label}
+                label={filter.label}
+                name={"club"}
+                value={filter.value}
+                active={filter === currentClubFilter}
+              />
+            ))}
+          </FilterDropdown>
+        </div>
       </div>
       <div className={"flex flex-col gap-2"}>
         {filteredPosts.map((post) => (

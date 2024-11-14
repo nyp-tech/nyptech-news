@@ -1,11 +1,11 @@
 import "@/styles/globals.css";
 import "@/styles/prosemirror.css";
 
+import { inter } from "@/styles/fonts";
+import clsx from "clsx";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import Providers from "./providers";
-import clsx from "clsx";
-import { inter } from "@/styles/fonts";
 import SideBar from "./side-bar";
 
 const title = "Novel - Notion-style WYSIWYG editor with AI-powered autocompletions";
