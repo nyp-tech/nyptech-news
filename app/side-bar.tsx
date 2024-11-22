@@ -10,10 +10,6 @@ const items = [
     href: "/events",
   },
   {
-    name: "Archive",
-    href: "/archive",
-  },
-  {
     name: "About",
     href: "/about",
   },

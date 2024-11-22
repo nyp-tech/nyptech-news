@@ -40,11 +40,12 @@ export default async function Page(props: RouteProps) {
   const { category, club } = await props.searchParams;
   const posts = getPosts();
 
-  const currentFilter = filters.find((filter) => filter.value === category) ?? filters[0];
+  const currentCategoryFilter = filters.find((filter) => filter.value === category) ?? filters[0];
   const currentClubFilter = clubFilters.find((filter) => filter.value === club) ?? clubFilters[0];
+
   const filteredPosts = posts.filter(
     (post) =>
-      (!currentFilter.value || post.metadata.category == currentFilter.value) &&
+      (!currentCategoryFilter.value || post.metadata.category == currentCategoryFilter.value) &&
       // TODO: change current filter label to value
       (!currentClubFilter.value || post.metadata.club == currentClubFilter.label)
   );
@@ -84,7 +85,7 @@ export default async function Page(props: RouteProps) {
               label={filter.label}
               name={"category"}
               value={filter.value}
-              active={filter === currentFilter}
+              active={filter === currentCategoryFilter}
             />
           ))}
         </div>
